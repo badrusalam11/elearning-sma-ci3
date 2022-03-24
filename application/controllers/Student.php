@@ -54,6 +54,7 @@ class Student extends CI_Controller
             $this->db->from('task');
             $this->db->join('teacher', 'task.teacher_id = teacher.id');
             $this->db->join('user', 'teacher.user_id = user.id');
+            $this->db->where('task.subject_id', $subjectId);
             $task = $this->db->get()->result_array();
             $this->data['task']  = $task;
 

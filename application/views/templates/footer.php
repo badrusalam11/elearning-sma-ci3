@@ -157,8 +157,122 @@
 
       }
 
+      function showDetailTask(task) {
+          console.log(task);
+          $('#detail-title').html(task.title);
+          $('#detail-date').html(task.date);
+          $('#detail-deadline').html(task.deadline);
+          //   $('#detail-attachment').html("<a href='<?= base_url('assets/attachment/') ?>" + task.attachment + "'>" + task.attachment + "</a>");
+          $('#detail-attachment').html("<a href='../../assets/attachment/" + task.attachment + "'>" + task.attachment + "</a>");
+          $('#detail-content').html(task.content);
+      }
+
+      function showEditTask(task) {
+          console.log(task);
+          $('#id').val(task.id);
+          $('#id').prop('name', 'id');
+          $('#title').val(task.title);
+          console.log(toDate(task.deadline));
+          $('#deadline').val(toDate(task.deadline));
+          //   $('#attachment').val(task.attachment);
+          $('.custom-file-label').html(task.attachment);
+          $('textarea#content').val(task.content);
+          $('form').prop('action', "<?= base_url('teacher/editTask') ?>");
+      }
+
+      function toDate(date) {
+          let array = date.split(',');
+          let splitDate = array[1].split(" ");
+          let monthNum;
+          if (getMonthFromString(splitDate[2]) < 10) {
+              monthNum = '0' + getMonthFromString(splitDate[2]);
+          }
+          return splitDate[3] + "-" + monthNum + "-" + splitDate[1];
+      }
+
+      function getMonthFromString(mon) {
+          return new Date(Date.parse(mon + " 1, 2012")).getMonth() + 1
+      }
+
+      function showDeleteTask(task) {
+          console.log(task);
+          $('#taskDelete').html(task.title);
+          $('#idDelete').val(task.id);
+          $('#subjectIdDelete').val(task.subject_id);
+
+      }
+
+      function showMark(data) {
+          console.log(data);
+          $('#id').val(data.id);
+          $('#detail-name').html(data.name);
+          $('#detail-class').html(data.student_class);
+          $('#detail-status').html(data.submission_status);
+          $('#detail-submission-date').html(data.submission_date);
+          $('#detail-attachment').html(data.attachment);
+          $('#detail-attachment').prop('href', '../../assets/attachment/' + data.attachment);
+          $('#mark').val(data.mark);
+
+      }
+
+      $('#role_id').on('change', function() {
+          let value = $('#role_id').val();
+          showExtraForm(value);
+
+      });
+
+      function showExtraForm(value) {
+          //student
+          if (value == 2) {
+              $('.student-form').css('display', 'block');
+              $('#NISN').prop('required', 'true');
+              $('#class').prop('required', 'true');
+              $('#NIP').removeAttr('required');
+
+              $('.teacher-form').css('display', 'none');
+          }
+          //teacher
+          else if (value == 3) {
+              $('.teacher-form').css('display', 'block');
+              $('#NIP').prop('required', 'true');
+              $('#NISN').removeAttr('required');
+              $('#class').removeAttr('required');
+
+              $('.student-form').css('display', 'none');
+          } else {
+              $('.teacher-form').css('display', 'none');
+              $('.student-form').css('display', 'none');
+          }
+      }
+
+      function showAddUser() {
+          $('#exampleModalLabel').html('Add New User');
+          $('form').trigger("reset");
+      }
+
+      function showEditUser(data) {
+          console.log(data);
+          $('#edit-id').val(data.id);
+          $('#edit-name').val(data.name);
+          $('#edit-email').val(data.email);
+          $('#edit-is_active').val(data.is_active);
+          $('#edit-role_name').val(data.role_name);
+          $('#edit-role_id').val(data.role_id);
+
+          $('#edit-NISN').val(data.NISN);
+          $('#edit-class').val(data.class);
+
+          $('#edit-NIP').val(data.NIP);
+          showExtraForm(data.role_id);
+      }
+
+      function showDeleteUser(data) {
+        $('#delete-id').val(data.id);
+        $('#delete-role_id').val(data.role_id);
+        $('#delete-name').html(data.name);
+      }
   </script>
-  <script src="<?= base_url('assets/js/custom.js')?>"></script>
+  <script src="<?= base_url('assets/js/custom.js') ?>"></script>
   </body>
 
   </html>

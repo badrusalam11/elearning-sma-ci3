@@ -119,7 +119,148 @@ class Admin extends CI_Controller
             
         }
 
+    }
+
+    public function userManagement()
+    {
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'User Management';
+        // $this->db->select('user.id,  user.name, user.email, user.is_active, user.date_created');
+        // $this->db->from('user');
+        // $this->db->join('student', 'user.i = student.user_id');
+        // // $this->db->join('teacher', 'user.id = teacher.user_id');
+        // $data['getUser'] = $this->db->get()->result_array();
+
+        $this->load->model('Admin_model', 'admin');
+        $data['getUser'] = $this->admin->getUser();
+
+        $data['getRole'] = $this->db->get('user_role')->result_array();
+        
+        // echo"<pre>";
+        // var_dump($this->admin->getUser());
+        // echo"</pre>";
+        // die;
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/user-management', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function addUser()
+    {
+        // var_dump($this->input->post());
+        // die;
+
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]', [
+            'is_unique' => 'This email has already registered!'
+        ]);
+        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[6]', [
+            'min_length' => 'Password is too short!'
+        ]);
+        $this->form_validation->set_rules('role_id', 'Role', 'required');
+        $this->form_validation->set_rules('NISN', 'NISN', 'is_unique[student.NISN]', [
+            'is_unique' => 'This NISN has already registered!'
+        ]);
+        $this->form_validation->set_rules('NIP', 'NIP', 'is_unique[teacher.NIP]', [
+            'is_unique' => 'This NIP has already used by other user!'
+        ]);
+
+        if ($this->form_validation->run() == true) {
+            
+            $this->load->model('Admin_model', 'admin');
+            $insert = $this->admin->insertUser($this->input->post());
+            // var_dump($insert);
+            // die;
+            if ($insert) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                         User added successfully
+                         </div>');
+                redirect('admin/usermanagement/');
+            }
+            else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                         User failed to add
+                         </div>');
+            redirect('admin/usermanagement/');
+                }
+         }
+        else {
+            $this->userManagement();
+        }
+
 
     }
+
+
+    public function editUser()
+    {
+
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('role_id', 'Role', 'required');
+
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_check_user_email');
+        // $this->form_validation->set_rules('NISN', 'NISN', 'is_unique[student.NISN]', [
+        //     'is_unique' => 'This NISN has already registered!'
+        // ]);
+        // $this->form_validation->set_rules('NIP', 'NIP', 'is_unique[teacher.NIP]', [
+        //     'is_unique' => 'This NIP has already used by other user!'
+        // ]);
+
+        if ($this->form_validation->run() == true) {
+
+            $this->load->model('Admin_model', 'admin');
+            $insert = $this->admin->updateUser($this->input->post());
+            // var_dump($insert);
+            // die;
+            if ($insert) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                         User updated successfully!
+                         </div>');
+                redirect('admin/usermanagement/');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                         User failed to update!
+                         </div>');
+                redirect('admin/usermanagement/');
+            }
+        } else {
+            $this->userManagement();
+        }
+    }
+    public function check_user_email($email)
+    {
+        if ($this->input->post('id'))
+            $id = $this->input->post('id');
+        else
+            $id = '';
+        $this->load->model('Admin_model', 'admin');
+        $result = $this->admin->check_unique_user_email($id, $email);
+        if ($result == 0)
+            $response = true;
+        else {
+            $this->form_validation->set_message('check_user_email', 'Email must be unique');
+            $response = false;
+        }
+        return $response;
+    }
+
+    public function deleteUser()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('user', ['id' => $id]);
+        if ($this->input->post('role_id')==2) {
+            $this->db->delete('student', ['user_id', $id]);
+        }
+        elseif ($this->input->post('role_id')==3) {
+            $this->db->delete('teacher', ['user_id'=>$id]);
+        }
+        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+            User has been Deleted</div>');
+        redirect('admin/usermanagement/');
+    }
+
+    
 
 }
