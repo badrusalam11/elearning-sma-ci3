@@ -108,13 +108,17 @@ class Teacher extends CI_Controller
         
         $previous_task = $this->db->get_where('task', ['id' => $this->input->post('id')])->row_array();
         if ($previous_task['attachment']!=null) {
-            if ($_FILES['attachment']==null) {
+            if ($_FILES['attachment']['name']==null) {
                 // ambil attachment kemarin
                 $_POST['attachment'] = $previous_task['attachment'];
+                $state = "null";
             }
             else{
                 unlink(FCPATH . 'assets/attachment/' . $previous_task['attachment']);
+                $state = "ada";
             }
+            // var_dump($state);
+            // die;
         }
 
         $this->db->where('id', $this->input->post('id'));

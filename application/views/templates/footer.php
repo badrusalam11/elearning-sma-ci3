@@ -186,6 +186,10 @@
           let monthNum;
           if (getMonthFromString(splitDate[2]) < 10) {
               monthNum = '0' + getMonthFromString(splitDate[2]);
+
+          } else {
+              monthNum = getMonthFromString(splitDate[2]);
+
           }
           return splitDate[3] + "-" + monthNum + "-" + splitDate[1];
       }
@@ -267,9 +271,9 @@
       }
 
       function showDeleteUser(data) {
-        $('#delete-id').val(data.id);
-        $('#delete-role_id').val(data.role_id);
-        $('#delete-name').html(data.name);
+          $('#delete-id').val(data.id);
+          $('#delete-role_id').val(data.role_id);
+          $('#delete-name').html(data.name);
       }
   </script>
   <script src="<?= base_url('assets/js/custom.js') ?>"></script>
