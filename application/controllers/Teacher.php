@@ -39,7 +39,8 @@ class Teacher extends CI_Controller
         }
         else {
             // select task by id teacher
-            $task = $this->db->get_where('task', ['teacher_id'=> $this->data['teacher']['id']])->result_array();
+            $task = $this->db->get_where('task', ['teacher_id'=> $this->data['teacher']['id'], 
+            'subject_id'=> $subjectId])->result_array();
             $this->data['task']  = $task;
             // ambil subject name
             $subject = $this->db->get_where('subject', ['id' => $subjectId])->row_array();

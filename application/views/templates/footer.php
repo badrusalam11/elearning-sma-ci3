@@ -275,6 +275,56 @@
           $('#delete-role_id').val(data.role_id);
           $('#delete-name').html(data.name);
       }
+
+
+      $(document).ready(function() {
+          var max_fields = 10;
+          var wrapper = $(".subject-array");
+          var add_button = $("#add_subject");
+          var html_element = wrapper.html();
+          var x = 1;
+
+          $(add_button).click(function(e) {
+              console.log('bisa');
+              e.preventDefault();
+              if (x < max_fields) {
+                  x++;
+                  $(wrapper).append(`<div class="mb-2">`+html_element+'<a href="#" class="delete text-danger mb-2">Delete</a></div>');
+              } else {
+                  alert('You Reached the limits')
+              }
+          });
+
+          $(wrapper).on("click", ".delete", function(e) {
+              console.log(x);
+              e.preventDefault();
+                $(this).parent('div').remove();
+            //   console.log($(this).parent('div'));
+              x--;
+          })
+      });
+
+      function showAddSubject() {
+          $('#exampleModalLabel').html('Add New Subject');
+          $('#submit').html('Submit');
+          $('form').trigger("reset");
+      }
+
+      function showEditSubject(data) {
+          $('#exampleModalLabel').html('Edit Subject');
+          $('#submit').html('Edit');
+
+          $('#id').val(data.id);
+          $('#name').val(data.name);
+          $('#cluster').val(data.cluster);
+          $('#subjectForm').prop('action', '<?= base_url('admin/editSubject') ?>');
+
+      }
+
+      function showDeleteSubject(data) {
+          $('#delete-id').val(data.id);
+          $('#delete-name').html(data.name);
+      }
   </script>
   <script src="<?= base_url('assets/js/custom.js') ?>"></script>
   </body>

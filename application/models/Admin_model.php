@@ -4,8 +4,6 @@ class Admin_Model extends CI_Model
 {
     public function getUser()
     {
-        // SELECT * FROM `user` LEFT JOIN `student` ON `user`.`id` = `student`.`user_id`;
-        // SELECT * FROM `user` LEFT JOIN `student` ON `user`.`id` = `student`.`user_id` LEFT JOIN `teacher` ON `user`.`id` = `teacher`.`user_id`;
 
         $query = "SELECT  `user`.`id`, `user`.`name`, `user`.`email`, `user`.`is_active`, `user`.`date_created`,
         `student`.`id` as student_id, `student`.`NISN`, `student`.`class`, 
@@ -19,7 +17,62 @@ class Admin_Model extends CI_Model
             LEFT JOIN `user_role`
                 ON `user`.`role_id` = `user_role`.`id`    
             ";
-        return $this->db->query($query)->result_array();
+
+        $result = $this->db->query($query)->result_array();
+        $i = 0;
+        foreach ($result as $r) {
+            $teacher_id = intval($r['teacher_id']);
+            $query2 = "SELECT `teacher_subject`.`teacher_id` as teacher_id, 
+            `teacher_subject`.`subject_id` as subject,
+            `subject`.`name` as subject_name
+                FROM `teacher_subject`
+                LEFT JOIN  `subject`
+                    ON `teacher_subject`.`subject_id` = `subject`.`id`
+                WHERE `teacher_subject`.`teacher_id` = '$teacher_id'
+            ";
+        $result2= $this->db->query($query2)->result_array();
+        $result[$i]['teacher'] = $result2; 
+        $i++;
+    }
+    // echo"<pre>";
+    // var_dump($result);
+    // echo"</pre>";
+    //     die;
+        return $result;
+
+        // $query = "SELECT  `user`.`id`, `user`.`name`, `user`.`email`, `user`.`is_active`, `user`.`date_created`,
+        // `student`.`id` as student_id, `student`.`NISN`, `student`.`class`, 
+        // `teacher`.`id` as teacher_id, `teacher`.`NIP`, 
+        // `user_role`.`id` as role_id, `user_role`.`name` as role_name,
+        // `subject`.`id` as subject_id, `subject`.`name` as subject_name
+        //     FROM `user` 
+        //     LEFT JOIN `student`
+        //         ON `user`.`id` = `student`.`user_id`
+        //     LEFT JOIN `teacher`
+        //         ON `user`.`id` = `teacher`.`user_id`
+        //     LEFT JOIN `user_role`
+        //         ON `user`.`role_id` = `user_role`.`id`    
+        //     LEFT JOIN  `teacher_subject`
+        //         ON `teacher`.`id` = `teacher_subject`.`teacher_id`
+        //     LEFT JOIN `subject`
+        //         ON `teacher_subject`.`subject_id` = `subject`.`id`
+        //     ";
+        // $result =  $this->db->query($query)->result_array();
+        // $role_id = [];
+        // $role_name = [];
+        // $new_result = [];
+        // $i = 0;
+        // foreach ($result as $r) {
+        //     $new_result['name'][$i] = $r['name'];
+        //     $new_result['subject_id'][$i] = $r['subject_id'];
+        //     $i++;
+        // }
+        // echo"<pre>";
+        // var_dump($new_result);
+        // echo"</pre>";
+        
+        // die;
+        
     }   
 
     public function insertUser($post)
@@ -65,6 +118,13 @@ class Admin_Model extends CI_Model
                 'NIP' => $post['NIP'],
                 'user_id' => $user_id
             ]);
+            $teacher_id = $this->db->insert_id();
+            foreach ($post['subject_id'] as $s) {
+                $this->db->insert('teacher_subject', [
+                    'teacher_id' => $teacher_id,
+                    'subject_id' => $s
+                ]);
+            }
         }
 
         if (isset($query2)) {

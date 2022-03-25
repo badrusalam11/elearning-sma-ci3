@@ -135,6 +135,8 @@ class Admin extends CI_Controller
         $data['getUser'] = $this->admin->getUser();
 
         $data['getRole'] = $this->db->get('user_role')->result_array();
+
+        $data['subject'] = $this->db->get('subject')->result_array();
         
         // echo"<pre>";
         // var_dump($this->admin->getUser());
@@ -261,6 +263,67 @@ class Admin extends CI_Controller
         redirect('admin/usermanagement/');
     }
 
+    public function subjectManagement()
+    {
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'Subject Management';
+
+
+        $data['subject'] = $this->db->get('subject')->result_array();
+
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('cluster', 'Cluster', 'required');
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/subject-management', $data);
+            $this->load->view('templates/footer');
+        }
+        else {
+            $insert = $this->db->insert('subject', ['name'=> $this->input->post('name'), 'cluster'=> $this->input->post('cluster')]);
+            if ($insert) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                Subject added!</div>');
+                redirect('admin/subjectmanagement/');
+            }
+            else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                Subject failed to add!</div>');
+                redirect('admin/subjectmanagement/');
+            }
+        }
+
+    }
+
+    public function editSubject()
+    {
+        $this->db->where('id', $this->input->post('id'));
+        $update = $this->db->update('subject', ['name' => $this->input->post('name'), 'cluster' => $this->input->post('cluster')]);
+        if ($update) {
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                Subject updated!</div>');
+            redirect('admin/subjectmanagement/');
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                Subject failed to update!</div>');
+            redirect('admin/subjectmanagement/');
+        }
+    }
+
+    public function deleteSubject()
+    {
+        $delete = $this->db->delete('subject', ['id'=> $this->input->post('id')]);
+        if ($delete) {
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                Subject deleted!</div>');
+            redirect('admin/subjectmanagement/');
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                Subject failed to delet!</div>');
+            redirect('admin/subjectmanagement/');
+        }
+    }
     
 
 }

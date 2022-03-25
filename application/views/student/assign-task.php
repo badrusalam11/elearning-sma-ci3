@@ -9,7 +9,7 @@
 
         <!-- <div class="section_availability "></div> -->
         <div class="summarytext text-justify mb-2"><?= $task['content'] ?></div>
-        <div class="summarytext text-primary">Attachment :<a href="<?= base_url('assets/task/') . $task['attachment'] ?>"><?= $task['attachment'] ?></a></div>
+        <div class="summarytext text-primary">Attachment :<a href="<?= base_url('assets/attachment/') . $task['attachment'] ?>"><?= $task['attachment'] ?></a></div>
         <!-- <div class="section-summary-activities mdl-right h6"><span class="activity-count">Assign By : <?= $task['user'] ?></span></div> -->
 
         <div id="submission-status">

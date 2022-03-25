@@ -24,6 +24,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Date Created</th>
                         <th scope="col">Role</th>
+                        <!-- <th scope="col">Role</th> -->
                         <th scope="col">Status</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -40,10 +41,13 @@
                             <td><?= $gu['email'] ?></td>
                             <td><?= date("l, j F Y, H:i:s", $gu['date_created']) ?></td>
                             <td><?= $gu['role_name'] ?></td>
+                            <!-- <td><?php foreach ($gu['teacher'] as $t) {
+                                                echo $t['subject_name'] . " - ";
+                                            } ?></td> -->
                             <p class="bg-danger"></p>
                             <td><?php echo ($gu['is_active'] == 1) ? '<p class="bg-primary text-white text-center">active</p>' : '<p class="bg-secondary text-white text-center">inactive</p>' ?></td>
                             <td>
-                                <a href="#" class="badge badge-success" onclick='showEditUser(<?= json_encode($gu); ?>)' data-toggle="modal" data-target="#editModal">Edit</a>
+                                <a href="#" class="badge badge-success" onclick='showEditUser(<?= json_encode($gu, JSON_FORCE_OBJECT); ?>)' data-toggle="modal" data-target="#editModal">Edit</a>
                                 <a href="#" class="badge badge-danger" onclick='showDeleteUser(<?= json_encode($gu); ?>)' data-toggle="modal" data-target="#deleteModal">Delete</a>
                             </td>
                         </tr>
@@ -137,7 +141,27 @@
                             </div>
 
                         </div>
+                        <div class="subject-array">
+                            <div class="row mb-2 subject-content">
+                                <div class="col">
+                                    <label for="Subject">Subject</label>
+                                    <select class="form-control subject_id" name="subject_id[]" required>
+                                        <?php foreach ($subject as $s) { ?>
+                                            <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-primary" id="add_subject"><i class="fas fa-plus-circle"></i> Add Subject</button>
+                            </div>
+                        </div>
+
                     </div>
+
 
                 </div>
                 <div class="modal-footer">
@@ -218,6 +242,25 @@
                             </div>
 
                         </div>
+                        <div class="subject-array">
+                            <div class="row mb-2 subject-content">
+                                <div class="col">
+                                    <label for="Subject">Subject</label>
+                                    <select class="form-control subject_id" name="subject_id[]" required>
+                                        <?php foreach ($subject as $s) { ?>
+                                            <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-primary" id="add_subject"><i class="fas fa-plus-circle"></i> Add Subject</button>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
@@ -242,7 +285,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="<?= base_url('admin/deleteUser')?>" method="post">
+                <form action="<?= base_url('admin/deleteUser') ?>" method="post">
                     <input type="text" id="delete-id" name="id" hidden>
                     <input type="text" id="delete-role_id" name="role_id" hidden>
 
