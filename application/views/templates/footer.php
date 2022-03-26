@@ -267,8 +267,88 @@
           $('#edit-class').val(data.class);
 
           $('#edit-NIP').val(data.NIP);
+          $('#edit-teacher_id').val(data.teacher_id);
+
+
+          var html_element = "";
+          var wrapper = $("#subject-array");
+          $(wrapper).html(html_element);
+
+          for (let i = 0; i < data.teacher.length; i++) {
+              html_element =
+                  `
+          <div class="subject-array">
+                            <div class="row mb-2 subject-content">
+                                <div class="col">
+                                    <label for="Subject">Subject</label>
+                                    <select class="form-control subject_id" id='id-` + i + `' name="subject_id[]" required>
+                                        <?php foreach ($subject as $s) { ?>
+                                            <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                             <input type="text" name="teacher_subject_id[]" id='teacher_subject-` + i + `' hidden>
+                            </div>
+                        </div>`;
+
+              $(wrapper).append(`<div class="mb-2">` + html_element + `<a href="#" id=delete-` + i + ` class="delete text-danger mb-2">Delete</a></div>`);
+              $('select#id-' + i).val(data.teacher[i].subject);
+              $('#teacher_subject-' + i).val(data.teacher[i].teacher_subject_id);
+              if (data.teacher.length > 0) {
+                  $('a#delete-0').remove();
+              }
+              //   $('.subject_id').val(data.teacher[i].subject);
+              //   console.log(data.teacher[i].subject);
+          }
+
           showExtraForm(data.role_id);
       }
+
+      // for edit
+      $(document).ready(function() {
+          var max_fields = 10;
+          var wrapper = $("#subject-array");
+          var add_button = $("#edit_subject");
+          var html_element =
+              `
+          <div class="subject-array">
+                            <div class="row mb-2 subject-content">
+                                <div class="col">
+                                    <label for="Subject">Subject</label>
+                                    <select class="form-control subject_id" name="subject_id[]" required>
+                                        <option value="">Choose subject..</option>
+                                        <?php foreach ($subject as $s) { ?>
+                                            <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>`
+
+          ;
+          var x = 1;
+
+          $(add_button).click(function(e) {
+              console.log('bisa');
+              e.preventDefault();
+              if (x < max_fields) {
+                  x++;
+                  $(wrapper).append(`<div class="mb-2">` + html_element + '<a href="#" class="delete text-danger mb-2">Delete</a></div>');
+              } else {
+                  alert('You Reached the limits')
+              }
+          });
+
+          $(wrapper).on("click", ".delete", function(e) {
+              console.log(x);
+              e.preventDefault();
+              $(this).parent('div').remove();
+              //   console.log($(this).parent('div'));
+              x--;
+          })
+      });
+
 
       function showDeleteUser(data) {
           $('#delete-id').val(data.id);
@@ -289,7 +369,7 @@
               e.preventDefault();
               if (x < max_fields) {
                   x++;
-                  $(wrapper).append(`<div class="mb-2">`+html_element+'<a href="#" class="delete text-danger mb-2">Delete</a></div>');
+                  $(wrapper).append(`<div class="mb-2">` + html_element + '<a href="#" class="delete text-danger mb-2">Delete</a></div>');
               } else {
                   alert('You Reached the limits')
               }
@@ -298,8 +378,8 @@
           $(wrapper).on("click", ".delete", function(e) {
               console.log(x);
               e.preventDefault();
-                $(this).parent('div').remove();
-            //   console.log($(this).parent('div'));
+              $(this).parent('div').remove();
+              //   console.log($(this).parent('div'));
               x--;
           })
       });

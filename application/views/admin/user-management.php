@@ -47,7 +47,7 @@
                             <p class="bg-danger"></p>
                             <td><?php echo ($gu['is_active'] == 1) ? '<p class="bg-primary text-white text-center">active</p>' : '<p class="bg-secondary text-white text-center">inactive</p>' ?></td>
                             <td>
-                                <a href="#" class="badge badge-success" onclick='showEditUser(<?= json_encode($gu, JSON_FORCE_OBJECT); ?>)' data-toggle="modal" data-target="#editModal">Edit</a>
+                                <a href="#" class="badge badge-success" onclick='showEditUser(<?= json_encode($gu, JSON_PRETTY_PRINT); ?>)' data-toggle="modal" data-target="#editModal">Edit</a>
                                 <a href="#" class="badge badge-danger" onclick='showDeleteUser(<?= json_encode($gu); ?>)' data-toggle="modal" data-target="#deleteModal">Delete</a>
                             </td>
                         </tr>
@@ -147,6 +147,7 @@
                                     <label for="Subject">Subject</label>
                                     <select class="form-control subject_id" name="subject_id[]" required>
                                         <?php foreach ($subject as $s) { ?>
+                                            <option value="">Choose subject..</option>
                                             <option value="<?= $s['id'] ?>"><?= $s['name'] ?></option>
                                         <?php } ?>
                                     </select>
@@ -187,6 +188,7 @@
             <form action="<?= base_url('admin/edituser') ?>" method="post">
                 <div class="modal-body">
                     <input type="text" name="id" id="edit-id" hidden>
+                    <input type="text" name="teacher_id" id="edit-teacher_id" hidden>
                     <div class="row mb-2">
                         <div class="col">
                             <label for="name">Name</label>
@@ -242,7 +244,8 @@
                             </div>
 
                         </div>
-                        <div class="subject-array">
+                        <div id="subject-array"></div>
+                        <!-- <div class="subject-array">
                             <div class="row mb-2 subject-content">
                                 <div class="col">
                                     <label for="Subject">Subject</label>
@@ -254,10 +257,10 @@
                                 </div>
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <div class="col">
-                                <button type="button" class="btn btn-primary" id="add_subject"><i class="fas fa-plus-circle"></i> Add Subject</button>
+                                <button type="button" class="btn btn-primary" id="edit_subject"><i class="fas fa-plus-circle"></i> Add Subject</button>
                             </div>
                         </div>
 

@@ -198,7 +198,10 @@ class Admin extends CI_Controller
 
     public function editUser()
     {
-
+        // echo "<pre>";
+        // var_dump($this->input->post());
+        // echo "</pre>";
+        // die;
         $this->form_validation->set_rules('name', 'Name', 'required');
         $this->form_validation->set_rules('role_id', 'Role', 'required');
 

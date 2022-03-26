@@ -22,7 +22,7 @@ class Admin_Model extends CI_Model
         $i = 0;
         foreach ($result as $r) {
             $teacher_id = intval($r['teacher_id']);
-            $query2 = "SELECT `teacher_subject`.`teacher_id` as teacher_id, 
+            $query2 = "SELECT `teacher_subject`.`id` as teacher_subject_id,`teacher_subject`.`teacher_id` as teacher_id, 
             `teacher_subject`.`subject_id` as subject,
             `subject`.`name` as subject_name
                 FROM `teacher_subject`
@@ -166,6 +166,36 @@ class Admin_Model extends CI_Model
             $query2 = $this->db->update('teacher', [
                 'NIP' => $post['NIP']
             ]);
+
+            // $this->db->where('teacher_id', $post['teacher_id']);
+            // $this->db->where('subject_id', $s);
+            // $this->db->where('id', $post['teacher_subject']);
+            // if (count($post['subject_id']) == count($post['teacher_subject_id'])) {
+                for ($i=0; $i < count($post['subject_id']); $i++) {
+                    if ($i+1 > count($post['teacher_subject_id'])) {
+                        $this->db->insert('teacher_subject', [
+                            'teacher_id' => $post['teacher_id'],
+                            'subject_id' => $post['subject_id'][$i]
+                        ]);
+                    }
+                    else {
+                        $this->db->where('id', $post['teacher_subject_id'][$i]);
+                        $query2 = $this->db->update('teacher_subject', [
+                            'teacher_id' => $post['teacher_id'],
+                            'subject_id' => $post['subject_id'][$i]
+                        ]);
+                    }
+                }
+            // }
+            // foreach ($post['subject_id'] as $s) {
+            //     $query2 = $this->db->update('teacher_subject', [
+            //         'teacher_id' => $post['teacher_id'],
+            //         'subject_id' => $s
+            //     ]);
+            // }
+            // var_dump($query2);
+            // die;
+
         }
 
         if (isset($query2)) {
