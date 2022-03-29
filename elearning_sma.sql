@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2022 at 04:05 AM
+-- Generation Time: Mar 29, 2022 at 03:05 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.4.27
 
@@ -83,7 +83,10 @@ INSERT INTO `subject` (`id`, `name`, `cluster`) VALUES
 (1, 'Fisika', 'MIPA'),
 (2, 'Kimia', 'MIPA'),
 (3, 'Biologi', 'MIPA'),
-(4, 'Pendidikan Agama', 'GENERAL');
+(4, 'Pendidikan Agama', 'GENERAL'),
+(5, 'Matematika', 'MIPA'),
+(6, 'Pendidikan Kewarganegaraan', 'GENERAL'),
+(7, 'Geografi', 'IPS');
 
 -- --------------------------------------------------------
 
@@ -107,7 +110,7 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `title`, `content`, `attachment`, `date`, `deadline`, `teacher_id`, `subject_id`) VALUES
-(1, 'tugas trigonometri', 'Buatlah makalah trigonometri', 'web_sekolah.docx', 1648177242, 1648504800, 1, 1);
+(1, 'tugas trigono aja', 'Buatlah makalah trigonometri', 'web_sekolah.docx', 1648178569, 1648504800, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -126,7 +129,9 @@ CREATE TABLE `teacher` (
 --
 
 INSERT INTO `teacher` (`id`, `NIP`, `user_id`) VALUES
-(1, '991834014314', 14);
+(1, '991834014314', 14),
+(2, '314325425', 15),
+(3, '3415313541', 16);
 
 -- --------------------------------------------------------
 
@@ -146,7 +151,12 @@ CREATE TABLE `teacher_subject` (
 
 INSERT INTO `teacher_subject` (`id`, `teacher_id`, `subject_id`) VALUES
 (1, 1, 1),
-(2, 1, 2);
+(2, 1, 2),
+(3, 3, 3),
+(4, 3, 1),
+(5, 3, 5),
+(6, 3, 2),
+(7, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -171,8 +181,10 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `name`, `email`, `image`, `password`, `role_id`, `is_active`, `date_created`) VALUES
 (12, 'admin baru', 'admin@admin.com', 'default.jpg', '$2y$10$MSGafloB5S6RdHuPc0Pi5.pRnbb9F3JLevu5NLiGBXKjGRKJrfqBS', 1, 1, 1648176020),
-(13, 'Badru Salam', 'badrusalam760@gmail.com', 'default.jpg', '$2y$10$.hd44oLU.VFuKfoJMhNLquGd36h05e5gFv2qOSpqy8VDbLVMF5adS', 2, 1, 1648176452),
-(14, 'Amir', 'amir123@gmail.com', 'default.jpg', '$2y$10$J3c2N5pza8Xu5//DhpI1b.iHnxCrDdQFONrfO.oU.KmVhtairm3ni', 3, 1, 1648176482);
+(13, 'Badru Salam', 'badrusalam123@gmail.com', 'default.jpg', '$2y$10$.hd44oLU.VFuKfoJMhNLquGd36h05e5gFv2qOSpqy8VDbLVMF5adS', 2, 1, 1648176452),
+(14, 'Amir', 'amir123@gmail.com', 'default.jpg', '$2y$10$J3c2N5pza8Xu5//DhpI1b.iHnxCrDdQFONrfO.oU.KmVhtairm3ni', 3, 1, 1648176482),
+(15, 'barcelona', 'barcelona@gmail.com', 'default.jpg', '$2y$10$4/3x6JSwlkSshNTFHrSX9elfxrDy0ma/ZeNz4DVFhrods9g83E89K', 3, 1, 1648206419),
+(16, 'frankie de jong', 'frankie@barcelona.com', 'default.jpg', '$2y$10$dS6JRdS7j.ySizsMEP4FiO3TWvxHee3e3Oc5foiDiZCviFfeEQu4m', 3, 1, 1648206525);
 
 -- --------------------------------------------------------
 
@@ -271,7 +283,8 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (9, 5, 'Task', 'student/task', 'fas fa-fw fa-folder', 1),
 (10, 6, 'Task', 'teacher/task', 'fas fa-fw fa-folder', 1),
 (11, 6, 'Mark Task', 'teacher/mark', 'fas fa-fw fa-folder', 1),
-(12, 1, 'User Management', 'admin/usermanagement', 'fas fa-fw fa-user', 1);
+(12, 1, 'User Management', 'admin/usermanagement', 'fas fa-fw fa-user', 1),
+(13, 1, 'Subject Management', 'admin/subjectmanagement', 'fas fa-fw fa-folder', 1);
 
 -- --------------------------------------------------------
 
@@ -389,7 +402,7 @@ ALTER TABLE `student_task`
 -- AUTO_INCREMENT for table `subject`
 --
 ALTER TABLE `subject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `task`
@@ -401,19 +414,19 @@ ALTER TABLE `task`
 -- AUTO_INCREMENT for table `teacher`
 --
 ALTER TABLE `teacher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `teacher_subject`
 --
 ALTER TABLE `teacher_subject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `user_access_menu`
@@ -437,7 +450,7 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT for table `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `user_token`
